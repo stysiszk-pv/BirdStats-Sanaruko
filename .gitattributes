@@ -1,0 +1,2 @@
+data/Bird_Sanaruko.xlsx filter=lfs diff=lfs merge=lfs -text
+data/*.xlsx filter=lfs diff=lfs merge=lfs -text

@@ -2,4 +2,4 @@
 <br>The Wild Bird Society of Hamamatsu has been recording the number of each species of bird at Lake Sanaru for a long time.
 <br>BirdStats-Sanaruko is a WebApp to share this record with the members of the society, local residents, and those interested in the dynamics of the bird community at this lake.
 <br><br>You can access the App with the following URL.
-<br>
+<br>https://birdstats-sanaruko.streamlit.app/

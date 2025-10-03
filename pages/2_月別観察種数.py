@@ -46,7 +46,7 @@ st.title('月ごとの観察種数の推移')
 st.write('#####  浜松野鳥の会')
 
 # データの読み込み
-df_display, _ , _ = data_loader.load_bird_data()
+df_display, _ , _ , _= data_loader.load_bird_data()
 
 # データの整形
 columns_to_keep_as_id = ['date', 'weather_en']

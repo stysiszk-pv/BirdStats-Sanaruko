@@ -21,4 +21,4 @@ def load_bird_data():
     # 観察データと天候データの結合
     df_display = df_weath.merge(df, on='date', how='left')
 
-    return df_display, df_tax, df_weath
+    return df_display, df_tax, df_weath,df

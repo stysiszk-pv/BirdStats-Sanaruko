@@ -90,7 +90,7 @@ with st.expander('このページの使い方', expanded=True):
 
 # 期間選択のUIを作成
 unique_months = sorted(species_per_month['Month'].unique())
-years = sorted(set(month.split('-')[0] for month in unique_months))
+years = sorted(set(month.split('-')[0] for month in unique_months), reverse=True)  # 新しい年から古い年の順
 
 # デフォルト値を設定（最新の年から12ヶ月前）
 default_year, default_month = unique_months[-12].split('-')

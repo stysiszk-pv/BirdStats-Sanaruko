@@ -2,8 +2,39 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import platform
 
 st.set_page_config(page_title="月別観察種数", page_icon="📈")
+
+# OSごとの日本語フォント設定
+def setup_japanese_fonts():
+    """
+    OSに応じて利用可能な日本語フォントを設定する
+    優先順位：
+    1. OS固有の日本語フォント
+    2. Noto Sans CJK JP（Linux/Windowsで広く利用可能）
+    3. IPAフォント（フォールバック）
+    """
+    system = platform.system()
+
+    font_family = ['sans-serif']  # デフォルトのフォールバック
+    if system == 'Darwin':  # macOS
+        font_list = ['Hiragino Sans GB', 'Hiragino Maru Gothic Pro', 'Hiragino Kaku Gothic Pro']
+    elif system == 'Windows':
+        font_list = ['MS Gothic', 'Yu Gothic', 'Meiryo']
+    else:  # Linux その他
+        font_list = ['Noto Sans CJK JP', 'IPAPGothic', 'VL PGothic']
+    
+    # フォントの優先順位を設定
+    plt.rcParams['font.sans-serif'] = font_list + font_family
+    plt.rcParams['font.family'] = 'sans-serif'
+    
+    # 負の値を表示するためのフォント設定
+    plt.rcParams['axes.unicode_minus'] = False
+
+# 日本語フォントの設定を適用
+setup_japanese_fonts()
 
 st.title('月ごとの観察種数の推移')
 st.write('#####  浜松野鳥の会')

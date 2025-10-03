@@ -2,37 +2,36 @@ import streamlit as st
 import openpyxl
 import pandas as pd
 import numpy as np
-import bg_cancelled as bg
+import sys
+import os
+
+# モジュールの検索パスにスクリプトのディレクトリを追加
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts import bg_cancelled as bg
+
+st.set_page_config(page_title="種別個体数", page_icon="📊")
 
 # read excel file
 df = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'obs_df')
-##SpeciesID as column names
-#df_spID = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'ObsTable')
-##Taxonomy table
 df_tax = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'TaxTable')
-##Weather table
 df_weath = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'weather')
 
 # convert date to datetime
 df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
-#df_spID['date'] = pd.to_datetime(df_spID['date'], format='%Y%m%d')
 df_weath['date'] = pd.to_datetime(df_weath['date'], format='%Y%m%d')
 
 # merge weather and observation data
 df_display = df_weath.merge(df, on='date', how='left')
 
 # set page titles
-st.title('''BirdStats_Sanaruko:\n#  佐鳴湖における鳥類個体数の推移''')
+st.title('種別個体数の推移')
 st.write('#####  浜松野鳥の会')
 
 # Abstract of this page
 st.write('###')
-with st.expander('概要', expanded=True):
-    st.markdown("浜松野鳥の会は1982年から現在まで, 佐鳴湖に生息する鳥類の個体数を目視観測により毎月記録してきました. " \
-    "  \n40年近くにわたる詳細な鳥類群集データが, 更に広く共有され受け継がれることを願い, 有志会員の手により, 観測記録のデジタル化が進められています (2020年まで完了, 2025/08/29現在)." \
-    "  \n\nこのページでは種ごとの年間最大個体数の推移を確認できます. 以下の手順に従って, 個体数を集計する期間と表示する種を選択してください.")
-    st.markdown('''                
-                1. 集計期間を設定.  
+with st.expander('このページの使い方', expanded=True):
+    st.markdown('''
+                1. 集計期間を設定  
                 渡り鳥 (特に冬鳥) の滞在期間は暦上の年をまたぐ場合があります.  
                 従って, 種ごとの滞在期間に合わせて最大個体数の集計期間を設定する必要があります.  
                 "集計期間を設定"のセクションを展開し, 集計期間の開始月を設定してください.  
@@ -41,19 +40,14 @@ with st.expander('概要', expanded=True):
                 2. 種を選択  
                 リストから個体数を確認したい種を選択してください (複数選択可).  
                 最初のタブで種ごとの個体数の年次推移を確認できます.  
-                2番目のタブでは各年の最大個体数を観測した月を確認できます.  
-                3番目のタブでは種ごとに最大個体数を観測した月を確認できます.  
+                2番目のタブでは各年の最大個体数を確認できます.  
+                3番目のタブでは各年の最大個体数を観測した月を確認できます.  
                 4番目のタブでは種ごとの月別個体数を確認できます.  
                 ''')
-    st.markdown("Source code及びデータはGitHubにて公開しています. 以下のリンクからアクセスしてください.")
-    st.markdown("(https://github.com/stysiszk-pv/BirdStats-Sanaruko.git)")
-    st.markdown("---")
-    st.markdown("月ごとの観察種数の推移を確認するには以下のページをご覧ください:")
-    st.markdown("[月ごとの観察種数の推移](https://github.com/stysiszk-pv/BirdStats-Sanaruko/scripts/species_per_month.py)")
 st.write('#')
 
 # set the biological year
-with st.expander('集計期間を設定.'): 
+with st.expander('集計期間を設定'): 
     blyr_st = st.selectbox("集計期間の始まりの月を選択してください.", 
                        options = np.arange(1, 13), 
                        index = 4,  # default to May
@@ -121,7 +115,7 @@ with tab4:
 st.write('#')
 
 # show datatable
-with st.expander('データテーブルを表示.'): 
+with st.expander('データテーブルを表示'): 
     dt_tab1, dt_tab2, dt_tab3 = st.tabs(['月別個体数データ', '天候データ', '分類表'])
     with dt_tab1: 
         sp_show = st.multiselect('表示する種を選択してください.', species, default=list(), key = 'dt_tab1')
@@ -144,6 +138,3 @@ with st.expander('データテーブルを表示.'):
         st.write('分類表は日本鳥類目録改訂第8版に準拠.')
         st.write('BirdTree列は鳥類系統樹のオープンデータベースであるBirdTree.org (2012) における分類群名.')
 st.write('#')
-
-st.text('This page was made by S.I.')
-st.text('Last updated: 2025/08/29')

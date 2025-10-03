@@ -4,6 +4,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import platform
+import sys
+import os
+
+# モジュールの検索パスにスクリプトのディレクトリを追加
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from scripts import data_loader
 
 st.set_page_config(page_title="月別観察種数", page_icon="📈")
 
@@ -39,16 +45,8 @@ setup_japanese_fonts()
 st.title('月ごとの観察種数の推移')
 st.write('#####  浜松野鳥の会')
 
-# read excel file
-df = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name='obs_df')
-df_weath = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name='weather')
-
-# convert date to datetime
-df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
-df_weath['date'] = pd.to_datetime(df_weath['date'], format='%Y%m%d')
-
-# merge weather and observation data
-df_display = df_weath.merge(df, on='date', how='left')
+# データの読み込み
+df_display, _ , _ = data_loader.load_bird_data()
 
 # データの整形
 columns_to_keep_as_id = ['date', 'weather_en']

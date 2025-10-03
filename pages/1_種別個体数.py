@@ -8,20 +8,12 @@ import os
 # モジュールの検索パスにスクリプトのディレクトリを追加
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts import bg_cancelled as bg
+from scripts import data_loader
 
 st.set_page_config(page_title="種別個体数", page_icon="📊")
 
-# read excel file
-df = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'obs_df')
-df_tax = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'TaxTable')
-df_weath = pd.read_excel('data/Bird_Sanaruko.xlsx', sheet_name = 'weather')
-
-# convert date to datetime
-df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
-df_weath['date'] = pd.to_datetime(df_weath['date'], format='%Y%m%d')
-
-# merge weather and observation data
-df_display = df_weath.merge(df, on='date', how='left')
+# データの読み込み
+df_display, df_tax, df_weath = data_loader.load_bird_data()
 
 # set page titles
 st.title('種別個体数の推移')
@@ -57,14 +49,14 @@ with st.expander('集計期間を設定'):
 
 # add biological year column
 # months earlier than the 1st month of the biological year are considered to be those in the last biological year
-df_blyr = df.copy()
+df_blyr = df_display.copy()
 df_blyr['biological_year'] = np.where(df_blyr['date'].dt.month >= blyr_st, 
                                       df_blyr['date'].dt.year, 
                                       df_blyr['date'].dt.year - 1, 
                                       )
 
 # calculate the maximum number of birds of each species for each year
-df_max = df.groupby(df_blyr['biological_year']).max()
+df_max = df_blyr.groupby(df_blyr['biological_year']).max()
 df_max = df_max.reset_index()
 
 # Summary table
@@ -80,7 +72,7 @@ df_weath_summary = (df_weath[df_weath['weather_en'] == 'Cancelled']
 df_summary_show = df_summary.merge(df_weath_summary, on='biological_year', how='left')
 
 # select species
-species = df.columns[1:]
+species = df_display.columns[1:]
 species = species.sort_values()
 selected_species = st.multiselect('表示する種を選択してください.', species, default=list())
 

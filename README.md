@@ -5,6 +5,7 @@ Since 1982, the Wild Bird Society of Hamamatsu has been recording the number of 
 
 <br>You can access the App with the following URL.
 <br>[https://birdstats-sanaruko-main.streamlit.app/](https://birdstats-sanaruko-main.streamlit.app/)
+<br>(URL has changed after we changed the main script file.)
 
 <br>The raw data is stored in [/data/Bird_Sanaruko.xlsx](/data/Bird_Sanaruko.xlsx)
 ## About us

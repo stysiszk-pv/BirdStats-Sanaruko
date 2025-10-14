@@ -10,3 +10,12 @@ Since 1982, the Wild Bird Society of Hamamatsu has been recording the number of 
 ## About us
 Please address all correspondence concerning this App to us at 
 <br>email: wbshamamatsu 'at' gmail.com
+
+## Local development
+
+To develop and test streamlit app localy, clone this repository and run 
+
+```
+uv run streamlit run main.py
+```
+

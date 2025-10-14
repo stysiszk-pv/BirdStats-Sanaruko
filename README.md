@@ -4,7 +4,7 @@ Since 1982, the Wild Bird Society of Hamamatsu has been recording the number of 
 <br><b>"BirdStats-Sanaruko"<b> is a WebApp to share this record with the members of the society, local residents, and those interested in the dynamics of the bird community at this lake.
 
 <br>You can access the App with the following URL.
-<br>[https://birdstats-sanaruko-main.streamlit.app/](https://birdstats-sanaruko.streamlit.app/)
+<br>[https://birdstats-sanaruko-main.streamlit.app/](https://birdstats-sanaruko-main.streamlit.app/)
 
 <br>The raw data is stored in [/data/Bird_Sanaruko.xlsx](/data/Bird_Sanaruko.xlsx)
 ## About us

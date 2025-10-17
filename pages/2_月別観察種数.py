@@ -1,6 +1,7 @@
 import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib import font_manager as fm
 import platform
 import sys
 import os
@@ -8,6 +9,7 @@ import os
 # モジュールの検索パスにスクリプトのディレクトリを追加
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts import data_loader
+
 
 st.set_page_config(page_title="月別観察種数", page_icon="📈")
 
@@ -22,6 +24,14 @@ def setup_japanese_fonts():
     """
     system = platform.system()
 
+    fpath = os.path.join(os.getcwd(), "streamlit_app/Noto_Sans_JP/NotoSansJP-Regular.otf")
+    prop = fm.FontProperties(fname=fpath)
+    font_dir = ['streamlit_app/Noto_Sans_JP']
+    for font in fm.findSystemFonts(font_dir):
+        fm.fontManager.addfont(font)
+
+    font_streamlit = ['Noto Sans JP']
+
     font_family = ['sans-serif']  # デフォルトのフォールバック
     if system == 'Darwin':  # macOS
         font_list = ['Hiragino Sans GB', 'Hiragino Maru Gothic Pro', 'Hiragino Kaku Gothic Pro']
@@ -31,7 +41,7 @@ def setup_japanese_fonts():
         font_list = ['Noto Sans CJK JP', 'IPAPGothic', 'VL PGothic']
     
     # フォントの優先順位を設定
-    plt.rcParams['font.sans-serif'] = font_list + font_family
+    plt.rcParams['font.sans-serif'] = font_streamlit + font_list + font_family
     plt.rcParams['font.family'] = 'sans-serif'
     
     # 負の値を表示するためのフォント設定

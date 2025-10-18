@@ -13,41 +13,54 @@ from scripts import data_loader
 
 st.set_page_config(page_title="月別観察種数", page_icon="📈")
 
-# OSごとの日本語フォント設定
+# 日本語フォントの設定
 def setup_japanese_fonts():
-    """
-    OSに応じて利用可能な日本語フォントを設定する
-    優先順位：
-    1. OS固有の日本語フォント
-    2. Noto Sans CJK JP（Linux/Windowsで広く利用可能）
-    3. IPAフォント（フォールバック）
-    """
-    system = platform.system()
-
-    fpath = os.path.join(os.getcwd(), "streamlit_app/Noto_Sans_JP/NotoSansJP-Regular.otf")
-    prop = fm.FontProperties(fname=fpath)
-    font_dir = ['streamlit_app/Noto_Sans_JP']
-    for font in fm.findSystemFonts(font_dir):
-        fm.fontManager.addfont(font)
-
-    font_streamlit = ['Noto Sans JP']
-
-    font_family = ['sans-serif']  # デフォルトのフォールバック
-    if system == 'Darwin':  # macOS
-        font_list = ['Hiragino Sans GB', 'Hiragino Maru Gothic Pro', 'Hiragino Kaku Gothic Pro']
-    elif system == 'Windows':
-        font_list = ['MS Gothic', 'Yu Gothic', 'Meiryo']
-    else:  # Linux その他
-        font_list = ['Noto Sans CJK JP', 'IPAPGothic', 'VL PGothic']
+    # まずローカルのフォントを試す
+    font_candidates = ['Noto Sans JP','Noto Sans CJK JP', 'IPAexGothic', 'MS Gothic', 'Yu Gothic']
+    # font_candidates = ['IPAexGothic', 'MS Gothic', 'Yu Gothic']
+    available_fonts = []
     
-    # フォントの優先順位を設定
-    plt.rcParams['font.sans-serif'] = font_streamlit + font_list + font_family
-    plt.rcParams['font.family'] = 'sans-serif'
+    for font_name in font_candidates:
+        try:
+            fp = fm.FontProperties(family=[font_name])
+            fn = fm.findfont(fp)
+            # 実際にフォントファイルが存在し、デフォルトのフォントでないことを確認
+            if os.path.exists(fn) and not fn.endswith('DejaVuSans.ttf'):
+                available_fonts.append(font_name)
+                st.text(f"フォントが見つかりました: {font_name} ({fn})")
+            else:
+                st.text(f"フォント {font_name} は利用できません")
+        except Exception as e:
+            st.text(f"フォント {font_name} は利用できません: {str(e)}")
     
-    # 負の値を表示するためのフォント設定
-    plt.rcParams['axes.unicode_minus'] = False
+    if not available_fonts:
+        # ローカルフォントが見つからない場合、Noto Sans JPをダウンロード
+        try:
+            import urllib.request
+            import tempfile
+            
+            # Noto Sans JP フォントをダウンロード
+            FONT_URL = "https://github.com/google/fonts/raw/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf"
+            
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.otf') as tf:
+                with urllib.request.urlopen(FONT_URL) as response:
+                    tf.write(response.read())
+                font_path = tf.name
+            
+            # ダウンロードしたフォントを登録
+            fm.fontManager.addfont(font_path)
+            available_fonts = ['Noto Sans JP']
+            st.text("日本語フォントをダウンロードしました")
+        except Exception as e:
+            st.warning(f"フォントのダウンロードに失敗しました: {e}")
+    
+    # フォント設定を適用
+    if available_fonts:
+        plt.rcParams['font.family'] = available_fonts
+    else:
+        plt.rcParams['font.family'] = ['sans-serif']
 
-# 日本語フォントの設定を適用
+# フォント設定を実行
 setup_japanese_fonts()
 
 st.title('月ごとの観察種数の推移')

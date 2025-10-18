@@ -17,7 +17,7 @@ st.set_page_config(page_title="月別観察種数", page_icon="📈")
 def setup_japanese_fonts():
     # まずローカルのフォントを試す
     font_candidates = ['Noto Sans JP','Noto Sans CJK JP', 'IPAexGothic', 'MS Gothic', 'Yu Gothic']
-    # font_candidates = ['IPAexGothic', 'MS Gothic', 'Yu Gothic']
+    # font_candidates = ['IPAexGothic', 'Yu Gothic']
     available_fonts = []
     
     for font_name in font_candidates:
@@ -27,11 +27,11 @@ def setup_japanese_fonts():
             # 実際にフォントファイルが存在し、デフォルトのフォントでないことを確認
             if os.path.exists(fn) and not fn.endswith('DejaVuSans.ttf'):
                 available_fonts.append(font_name)
-                st.text(f"フォントが見つかりました: {font_name} ({fn})")
+                print(f"フォントが見つかりました: {font_name} ({fn})")
             else:
-                st.text(f"フォント {font_name} は利用できません")
+                print(f"フォント {font_name} は利用できません")
         except Exception as e:
-            st.text(f"フォント {font_name} は利用できません: {str(e)}")
+            print(f"フォント {font_name} は利用できません: {str(e)}")
     
     if not available_fonts:
         # ローカルフォントが見つからない場合、Noto Sans JPをダウンロード
@@ -50,7 +50,7 @@ def setup_japanese_fonts():
             # ダウンロードしたフォントを登録
             fm.fontManager.addfont(font_path)
             available_fonts = ['Noto Sans JP']
-            st.text("日本語フォントをダウンロードしました")
+            print("日本語フォントNoto Sans JPをダウンロードしました")
         except Exception as e:
             st.warning(f"フォントのダウンロードに失敗しました: {e}")
     
